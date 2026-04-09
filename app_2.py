@@ -14,7 +14,15 @@ st.set_page_config(
     page_icon= "📈",
     layout="wide"
 )
+@st.cache_data(ttl = 3600,show_spinner=False) #Cache the data for 1 hour to avoid hitting API limits and speed up the app
+def fetch_stock_data(ticker_symbol, days):
+    ticker = yf.Ticker(ticker_symbol)
 
+    end_date = pd.Timestamp.today()
+    start_date = end_date - pd.Timedelta(days = days)
+
+    hist = ticker.history(start = start_date,end = end_date)
+    return hist
 # ----------------------------------------------------------
 # 2. TITLE & DESCRIPTION
 # ----------------------------------------------------------
@@ -42,6 +50,8 @@ dataset = st.sidebar.selectbox(
 if dataset == "Stock Price":
     ticker_symbol = st.sidebar.text_input("Enter Stock Ticker (e.g., AAPL, TSLA, MSFT)", value="AAPL").upper()
 
+            
+
 # Slider to choose how many days of data to show
 num_days = st.sidebar.slider(
     "Number of days",
@@ -67,8 +77,8 @@ if dataset == "Stock Price":
     #values = 100 + np.cumsum(np.random.randn(num_days))   # random walk
     #ylabel = "Price (USD)"
     #yfinance periods like 30 days , 90 days etc
-    ticker = yf.Ticker(ticker_symbol)#"AAPL MEANS APPLE STOCK"
-    hist = ticker.history(period = f"{num_days}d")
+    with st.spinner(f"Fetching {ticker_symbol} data..."):
+        hist = fetch_stock_data(ticker_symbol,num_days)
 
     #Safety check on the input provided. 
     if hist.empty:

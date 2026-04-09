@@ -6,21 +6,13 @@ import google.generativeai as genai #We add the Germini API
 # ----------------------------------------------------------
 # Hide the streamlit menu and toolbar
 # ----------------------------------------------------------
-hide_steamlit_style ="""
-
+hide_streamlit_style = """
 <style>
-/* Hides the toolbar icons (star, github, etc.) */
-[data-testid="stToolbar"] {visibility: hidden !important;}
-
-/* Hides the main menu (hamburger) if present */
-#MainMenu {visibility: hidden !important;}
-
-/* Optional: Hides the entire header area to remove the empty space at the top */
-header {visibility: hidden !important;}
+/* Target specifically the action items on the right side of the header */
+[data-testid="stToolbarActions"] {visibility: hidden !important;}
 </style>
 """
-
-st.markdown(hide_steamlit_style,unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # ----------------------------------------------------------
 # 1. PAGE CONFIGURATION  (must be the very first st command)
